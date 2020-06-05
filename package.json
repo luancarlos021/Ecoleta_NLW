@@ -1,0 +1,10 @@
+{
+  "name": "nlw",
+  "description": "Projeto desenvolvido na Next_Level_Week da RocketSeat",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
