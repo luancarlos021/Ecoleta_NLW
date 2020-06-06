@@ -6,6 +6,12 @@ const server = express()
 server.use(express.static("public"))
 
 
+// Utilizando um template engine
+const nunjucks = require("nunjucks")
+nunjucks.configure("src/views", {
+    express: server,
+    noCache: true
+})
 
 // Configurar caminhos da aplicação
 
