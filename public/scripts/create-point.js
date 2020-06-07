@@ -20,15 +20,6 @@ function populateUFs() {
 
     const url_uf = "https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome"
     get_uf_cities(url_uf, ufSelect)
-
-    // fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome")
-    // .then( res => res.json() )
-    // .then( states => {
-        
-    //     for ( const state of states ){
-    //         ufSelect.innerHTML += `<option value="${state.id}">${state.nome}</option>`            
-    //     }
-    // })
 }
 
 populateUFs()
@@ -95,8 +86,6 @@ function handleSelectedItem(event){
         // se não estiver adicionar, adicionar à seleção
         selectedItems.push(itemId)
     }
-
-    console.log(selectedItems)
 
     // atualizar o campo escondido com os itens selecionados
     collectedItems.value = selectedItems
