@@ -43,9 +43,7 @@ function getCities(event) {
         cityInput.value = inpcity.target.options[inpcity.target.selectedIndex].text
     })
 
-
     const id_uf = event.target.value
-    console.log(id_uf)
 
     stateInput.value = event.target.options[event.target.selectedIndex].text
 
@@ -65,6 +63,7 @@ document
     .querySelector("select[name=uf]")
     .addEventListener("change", getCities)
 
+
 // Items de Coleta
 // pegar todos os li's;
 
@@ -73,7 +72,7 @@ function handleSelectedItem(event){
     // adicionar ou remover uma classe com javascript
     itemLi.classList.toggle("selected")   
         
-    const itemId = event.target.dataset.id
+    const itemId = itemLi.dataset.id
 
     // Verificar se existem itens selecionados, se sim
     // pegar os itens selecionados
