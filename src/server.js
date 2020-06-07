@@ -8,6 +8,9 @@ const db = require("./database/db")
 // Configurar pasta pública
 server.use(express.static("public"))
 
+// Habilitar o uso do req.body na aplicação
+server.use(express.urlencoded({ extended: true }))
+
 
 // Utilizando um template engine
 const nunjucks = require("nunjucks")
@@ -26,7 +29,53 @@ server.get("/", (req, res) => {
 })
 
 server.get("/create-point", (req, res) => {
+
+    // req.query: Query Strings da nossa URL
+    // console.log(req.query)
+
     return res.render("create-point.html")
+})
+
+server.post("/savepoint", (req, res) => {
+
+    // req.body: O corpo do formulário
+    // console.log(req.body)
+
+    // Inserir dados no banco de dados
+    const query = `
+        INSERT INTO places (
+            name,
+            image,
+            address,
+            address2,
+            state,
+            city,
+            itens
+        ) VALUES (?,?,?,?,?,?,?);   
+    `
+    const values = [
+        req.body.name,
+        req.body.image,
+        req.body.address,
+        req.body.address2,
+        req.body.state,
+        req.body.city[1],
+        req.body.items
+    ]
+
+    function afterInsertData(err) {
+        if (err) {
+            console.log(err)
+            return res.send("<h1>Erro no cadastro!</h1")
+        } else {
+            console.log("Cadastrado com Sucesso")
+            console.log(this)
+
+            return res.render("create-point.html", {saved: true })
+        }
+    }
+
+    db.run(query, values, afterInsertData)
 })
 
 server.get("/search", (req, res) => {
@@ -40,7 +89,7 @@ server.get("/search", (req, res) => {
         const total = rows.length
 
         // Mostrar a página HTML com os dados do db
-        return res.render("search-results.html", { places: rows, total: total} )
+        return res.render("search-results.html", { places: rows, total: total })
     })
 })
 
