@@ -1,6 +1,9 @@
 const express = require("express")
 const server = express()
 
+// Pegar o banco de dados
+
+const db = require("./database/db")
 
 // Configurar pasta pública
 server.use(express.static("public"))
@@ -19,7 +22,7 @@ nunjucks.configure("src/views", {
 // req: Requisição/pedido
 // res: Resposta
 server.get("/", (req, res) => {
-    return res.render("index.html", { luan: 0})
+    return res.render("index.html")
 })
 
 server.get("/create-point", (req, res) => {
@@ -27,7 +30,18 @@ server.get("/create-point", (req, res) => {
 })
 
 server.get("/search", (req, res) => {
-    return res.render("search-results.html")
+
+    // Pegar os dados do db
+    db.all(`SELECT * FROM places`, function (err, rows) {
+        if (err) {
+            return console.log(err)
+        }
+
+        const total = rows.length
+
+        // Mostrar a página HTML com os dados do db
+        return res.render("search-results.html", { places: rows, total: total} )
+    })
 })
 
 
