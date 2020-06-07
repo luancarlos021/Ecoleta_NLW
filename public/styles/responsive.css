@@ -2,12 +2,10 @@
     #page-home {
         background-position-x: 70vw;
     }
-
     #page-home .content {
         align-items: center;
         text-align: center;
     }
-
     #page-home main {
         align-items: center;
     }
@@ -23,7 +21,24 @@
         grid-template-columns: 1fr;
 
     }
+
+    #page-create-point .field-group{
+        flex-direction: column;
+    }
+    #page-create-point .field-group .field + .field {
+        margin-left: 0;
+    }
 }
+
+@media (max-width: 600px) {
+    #page-create-point .item-grid { 
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+}
+
+
 
 @media (min-width: 1700px) {
     #page-home {
