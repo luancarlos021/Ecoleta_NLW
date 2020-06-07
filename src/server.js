@@ -80,8 +80,16 @@ server.post("/savepoint", (req, res) => {
 
 server.get("/search", (req, res) => {
 
+    const search = req.query.search
+
+    if (search == "") {
+        // Pesquisa vazia
+        return res.render("search-results.html", { total: 0 })
+
+    }
     // Pegar os dados do db
-    db.all(`SELECT * FROM places`, function (err, rows) {
+    console.log(search)
+    db.all(`SELECT * FROM places WHERE city LIKE '%${search}%'`, function (err, rows) {
         if (err) {
             return console.log(err)
         }
