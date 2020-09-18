@@ -2,7 +2,7 @@
     <img src="public/assets/logo.svg">
 </h1>
 
-:rocket: Projeto desenvolvido na **Next Week Level** da RocketSeat
+:rocket: Projeto desenvolvido na **Next Week Level #1** da RocketSeat
 
 Professor: [Mayk Brito](https://github.com/maykbrito)
 
@@ -36,8 +36,8 @@ O projeto foi desenvolvido utilizando as seguintes tecnologias:
     # Execute o npm para instalar as dependências
     $ npm install
     
-    # Pronto, inicie o projeto
-    $ npm start
+    # Inicie o projeto
+    $ npm start    
 ```
-
+### Agora é só acessar [localhost:3000](http://localhost:3000)
 Desenvolvido por [Luan Carlos](https://linkedin.com/in/luan-carlos) | Copyright © [Rocketseat](https://rocketseat.com.br/)
