@@ -1,15 +1,16 @@
 {
-  "name": "nlw",
-  "description": "Projeto desenvolvido na Next_Level_Week da RocketSeat",
-  "scripts": {
-    "start": "nodemon src/server.js"
-  },
-  "dependencies": {
-    "express": "^4.17.1",
-    "nunjucks": "^3.2.1",
-    "sqlite3": "^4.2.0"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.4"
-  }
+    "name": "nlw",
+    "description": "Projeto desenvolvido na Next_Level_Week da RocketSeat",
+    "author": "Luan Carlos",
+    "scripts": {
+        "start": "nodemon src/server.js"
+    },
+    "dependencies": {
+        "express": "^4.17.1",
+        "nunjucks": "^3.2.1",
+        "sqlite3": "^4.2.0"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.4"
+    }
 }
