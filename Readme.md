@@ -22,7 +22,9 @@ O projeto foi desenvolvido utilizando as seguintes tecnologias:
 - [Nunjucks](https://mozilla.github.io/nunjucks/)
 - [Nodejs](https://nodejs.org/en/)
 - [Sqlite](https://www.sqlite.org/index.html)
-
+- [Docker](https://www.docker.com/)
+- [Nginx](https://www.nginx.com/)
+----------
 ## Para baixar e iniciar o projeto
 
 ```bash
@@ -37,7 +39,29 @@ O projeto foi desenvolvido utilizando as seguintes tecnologias:
     $ npm install
     
     # Inicie o projeto
-    $ npm start    
+    $ npm start
 ```
+Quando o projeto é iniciado, é realizar a configuração do banco de dados(db.js) e já é criado a tabela usada no projeto.
 ### Agora é só acessar [localhost:3000](http://localhost:3000)
+----------
+## Iniciando o projeto com o docker-compose
+
+```bash
+    # Clone o repositório
+    $ git clone https://github.com/luancarlos021/Ecoleta_NLW.git
+
+    # Entre no diretório
+    $ cd Ecoleta_NLW
+
+    # Executar o docker-compose
+    $ docker-compose up -d --build
+```
+### Agora é só acessar [localhost:8000](http://localhost:8000)
+#
+No [docker-compose.yml](https://github.com/luancarlos021/Ecoleta_NLW/blob/master/docker-compose.yml) é possível verificar a existência de um serviço chamado loadbalancer, ele irá fazer o balanceamento de carga, caso existe vários containers. Para escalar a aplicação, é só rodar o seguinte comando:
+```bash
+    # Comando para escalar a aplicação. Por exemplo para 2 containers
+    $ docker-compose up --scale app=2 -d
+```
+
 Desenvolvido por [Luan Carlos](https://linkedin.com/in/luan-carlos) | Copyright © [Rocketseat](https://rocketseat.com.br/)
