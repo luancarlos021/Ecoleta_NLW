@@ -2,15 +2,9 @@
     "name": "nlw",
     "description": "Projeto desenvolvido na Next_Level_Week da RocketSeat",
     "author": "Luan Carlos",
-    "scripts": {
-        "start": "nodemon src/server.js"
-    },
     "dependencies": {
         "express": "^4.18.2",
         "nunjucks": "^3.2.4",
         "sqlite3": "^5.1.6"
-    },
-    "devDependencies": {
-        "nodemon": "^2.0.4"
     }
 }
