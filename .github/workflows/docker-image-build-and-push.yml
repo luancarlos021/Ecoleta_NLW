@@ -24,9 +24,9 @@ jobs:
       
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@v4.6.0
+        uses: docker/metadata-action@v4
         with:
-          images: ${{ env.IMAGE_NAME }}
+#           images: ${{ env.IMAGE_NAME }}
           tags: |
             type=raw,value=1.0.${{ github.run_number }},priority=1000
             type=ref,event=branch
