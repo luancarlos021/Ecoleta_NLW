@@ -3,8 +3,8 @@ name: Publish Docker image
 on:
   push:
     branches: [ "master" ]
-#     tags:
-#       - "v*.*.*"
+    tags:
+      - "v*.*.*"
 
 jobs:
   push_to_registry:
@@ -35,5 +35,5 @@ jobs:
           context: .
           file: ../../Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ on.push.tags }}
           labels: ${{ steps.meta.outputs.labels }}
