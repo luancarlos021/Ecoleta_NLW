@@ -25,7 +25,8 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4.6.0
         with:
-          images: ${{ env.IMAGE_NAME }}
+          #images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: luancarlos021/ecoleta
           tags: |
             type=raw,value=1.0.${{ github.run_number }},priority=1000
             type=ref,event=branch
