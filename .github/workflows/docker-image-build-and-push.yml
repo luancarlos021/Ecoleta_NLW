@@ -30,13 +30,14 @@ jobs:
             # minimal
             type=semver,pattern={{version}}
             # use custom value instead of git tag
-            type=semver,pattern={{version}},value=1.0.0
+              type=semver,pattern={{version}},value=1.0.0
       
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
           context: .
           file: ../../Dockerfile
+          platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: :${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
