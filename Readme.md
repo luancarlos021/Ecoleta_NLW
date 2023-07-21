@@ -61,7 +61,7 @@ Quando o projeto é iniciado, é realizar a configuração do banco de dados(db.
 No [docker-compose.yml](https://github.com/luancarlos021/Ecoleta_NLW/blob/master/docker-compose.yml) é possível verificar a existência de um serviço chamado loadbalancer, ele irá fazer o balanceamento de carga, caso existe vários containers. Para escalar a aplicação, é só rodar o seguinte comando:
 ```bash
     # Comando para escalar a aplicação. Por exemplo para 2 containers
-    $ docker-compose up --scale app=2 -d
+    $ docker-compose up --scale app=2 -d 
 ```
 
 Desenvolvido por [Luan Carlos](https://linkedin.com/in/luan-carlos) | Copyright © [Rocketseat](https://rocketseat.com.br/)
