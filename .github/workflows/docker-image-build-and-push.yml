@@ -22,11 +22,12 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 #           registry: ${{ env.REGISTRY }}
       
-#       - name: Extract metadata (tags, labels) for Docker
-#         id: meta
-#         uses: docker/metadata-action@v4
-#         with:
-# #           images: /${{ env.IMAGE_NAME }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: luancarlos021/ecoleta
+          tag-sha: true
 #           tags: |
 #             type=raw,value=1.0.${{ github.run_number }},priority=1000
 #             type=ref,event=branch
@@ -40,5 +41,6 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: luancarlos021/ecoleta:v1.0.${{ github.run_number }}
-#           labels: ${{ steps.meta.outputs.labels }}
+#           tags: luancarlos021/ecoleta:v1.0.${{ github.run_number }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
