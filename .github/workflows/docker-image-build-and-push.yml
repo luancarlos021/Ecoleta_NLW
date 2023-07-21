@@ -27,8 +27,8 @@ jobs:
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v4
-#         with:
-#           images: luancarlos021/ecoleta
+        with:
+          images: luancarlos021/ecoleta
 # #           tags: |
 # #             # minimal
 # #             type=semver,pattern={{version}}
