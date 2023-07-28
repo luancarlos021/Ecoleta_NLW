@@ -38,8 +38,6 @@ spec:
             cpu: "0.3"
         ports:
           - containerPort: 3000
-status: {}
-
 ---
 
 apiVersion: v1
