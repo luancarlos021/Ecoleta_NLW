@@ -1,0 +1,93 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: e-coleta
+status:
+  phase: Active
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: e-coleta
+  name: e-coleta
+  namespace: e-coleta
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: e-coleta
+  # strategy: {}
+  template:
+    metadata:
+      labels:
+        app: e-coleta
+    spec:
+      containers:
+      - image: luancarlos021/ecoleta
+        imagePullPolicy: Always
+        name: e-coleta
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+          requests:
+            memory: "100Mi"
+            cpu: "0.3"
+        ports:
+          - containerPort: 3000
+status: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: e-coleta
+  name: e-coleta
+  namespace: e-coleta
+  annotations:
+    version: "1.0"
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - port: 3000
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: e-coleta
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-app
+  labels:
+    name: ingress-app
+  namespace: e-coleta
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: "nginx"
+  rules:
+  - host: "e-coleta.luancarlos.duckdns.org"
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: e-coleta
+            port:
+              number: 3000
