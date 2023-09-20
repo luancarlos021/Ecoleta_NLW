@@ -76,6 +76,8 @@ metadata:
   namespace: e-coleta
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: "letsencrypt-prod-cluster"
+
 spec:
   ingressClassName: "nginx"
   rules:
@@ -89,3 +91,7 @@ spec:
             name: e-coleta
             port:
               number: 3000
+  tls:
+  - hosts:
+      - e-coleta.luancarlos.duckdns.org
+    secretName: letsencrypt-prod-cluster-tls
