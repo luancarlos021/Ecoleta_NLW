@@ -44,6 +44,6 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
 #           tags: luancarlos021/ecoleta:v1.0.${{ github.run_number }}
-          tags: luancarlos021/ecoleta:go
+          tags: luancarlos021/ecoleta:gorn
 #           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
