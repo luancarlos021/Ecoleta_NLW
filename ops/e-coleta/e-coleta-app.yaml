@@ -30,7 +30,7 @@ spec:
         app: e-coleta
     spec:
       containers:
-      - image: luancarlos021/ecoleta:v1.1
+      - image: luancarlos021/ecoleta:dev-b89e1e6
         imagePullPolicy: Always
         name: e-coleta
         resources:
