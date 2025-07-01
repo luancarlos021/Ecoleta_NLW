@@ -24,13 +24,17 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Extract Docker metadata (tags, labels)
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: luancarlos021/ecoleta
-          tags: |
-            type=ref,event=tag
+      - name: Generate Docker tag
+        id: generate_tag
+        run: |
+          TAG="${GITHUB_REF##*/}"
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            IMAGE_TAG="luancarlos021/ecoleta:${TAG}"
+          else
+            SHORT_SHA=$(git rev-parse --short HEAD)
+            IMAGE_TAG="luancarlos021/ecoleta:dev-${SHORT_SHA}"
+          fi
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_OUTPUT
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
@@ -39,17 +43,17 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.generate_tag.outputs.IMAGE_TAG }}
 
       - name: Update image tag in Kubernetes manifest
         run: |
-          IMAGE_TAG=$(echo "${{ steps.meta.outputs.tags }}" | cut -d',' -f1)
-          sed -i "s|luancarlos021/ecoleta:.*|${IMAGE_TAG}|" ops/e-coleta/e-coleta-app.yaml
+          ESCAPED_TAG=$(echo "${{ steps.generate_tag.outputs.IMAGE_TAG }}" | sed 's_/_\\/_g')
+          sed -i "s|luancarlos021/ecoleta:.*|${ESCAPED_TAG}|" ops/e-coleta/e-coleta-app.yaml
 
-      - name: Commit and push manifest changes
+      - name: Commit updated manifest
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git add ops/e-coleta/e-coleta-app.yaml
-          git commit -m "chore: update
+          git commit -m "chore: update image tag to ${{ steps.generate_tag.outputs.IMAGE_TAG }}"
+          git push
