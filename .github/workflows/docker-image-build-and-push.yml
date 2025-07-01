@@ -23,18 +23,12 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-#           registry: ${{ env.REGISTRY }}
-      
+
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v4
         with:
           images: luancarlos021/ecoleta
-# #           tags: |
-# #             # minimal
-# #             type=semver,pattern={{version}}
-# #             # use custom value instead of git tag
-# #             type=semver,pattern={{version}},value=v1.0.0
       
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
@@ -43,7 +37,17 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-#           tags: luancarlos021/ecoleta:v1.0.${{ github.run_number }}
-          tags: luancarlos021/ecoleta:v1.1
-#           tags: ${{ steps.meta.outputs.tags }}
+          tags: luancarlos021/ecoleta:v1.1.${{ github.run_number }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Update Kubernetes manifest image tag
+        run: |
+          sed -i "s|luancarlos021/ecoleta:.*|luancarlos021/ecoleta:v1.1.${{ github.run_number }}|" ops/e-coleta/e-coleta-app.yaml
+          
+      - name: Commit updated manifest
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add ops/e-coleta/e-coleta-app.yaml
+          git commit -m "chore: update image tag to v1.1.${{ github.run_number }}"
+          git push
