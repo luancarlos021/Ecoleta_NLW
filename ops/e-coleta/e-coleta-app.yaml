@@ -15,7 +15,7 @@ metadata:
   name: e-coleta
   namespace: e-coleta
 spec:
-  replicas: 4
+  replicas: 1
   selector:
     matchLabels:
       app: e-coleta
