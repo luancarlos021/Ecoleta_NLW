@@ -32,7 +32,7 @@ spec:
     - name: log-console-output
       value: json
     - name: cache-stack
-      value: kubernetes
+      value: jdbc-ping
     - name: cache-owner
       value: "2"
     - name: metrics-enabled 
