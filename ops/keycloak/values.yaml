@@ -9,6 +9,11 @@ global:
 
 fullnameOverride: keycloak
 
+image:
+  registry: quay.io
+  repository: keycloak/keycloak
+  tag: "24.0.2"
+
 replicas: 1
 
 db:

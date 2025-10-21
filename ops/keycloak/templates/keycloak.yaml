@@ -6,6 +6,7 @@ metadata:
 spec:
   startOptimized: false
   instances: {{ .Values.replicas }}
+  image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
   resources: {{ toYaml .Values.resources | nindent 4 }}
   db:
     vendor: postgres
