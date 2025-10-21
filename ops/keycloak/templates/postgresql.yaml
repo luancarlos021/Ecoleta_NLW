@@ -1,0 +1,59 @@
+{{- $dbname := required "A valid postgresql.dbname is required!" .Values.postgresql.dbname -}}
+{{- $name := tpl $dbname $ }}
+apiVersion: acid.zalan.do/v1
+kind: postgresql
+metadata:
+  name: {{ include "common.names.fullname" . }}-postgresql-db
+  namespace: {{ include "common.names.namespace" . }}
+  labels:
+    app.kubernetes.io/component: postgresql
+    app.kubernetes.io/created-by: postgresql-kubernetes-operator
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "common.names.fullname" . }}
+    app.kubernetes.io/part-of: {{ .Chart.Name }}
+    app.kubernetes.io/version: {{ .Values.postgresql.version | quote }}
+    helm.sh/chart: {{ include "common.names.chart" . }}
+    me_component: PostgreSQL
+  {{- if .Values.commonAnnotations }}
+  annotations:
+  {{- toYaml .Values.commonAnnotations | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.postgresql.dockerImage }}
+  dockerImage: {{ .Values.postgresql.dockerImage }}
+  {{- end }}
+  {{- if .Values.postgresql.extensions }}
+  preparedDatabases:
+    {{ $name }}:
+      extensions:
+  {{- range $key, $value := .Values.postgresql.extensions }}
+        {{ $key }}: {{ $value }}
+  {{- end }}
+  {{- end }}
+  postgresql:
+    parameters:
+      work_mem: '128MB'
+    version: {{ .Values.postgresql.version | quote}}
+  env:
+  - name: DBNAME
+    value: {{ $dbname }}
+  teamId: postgresql
+  numberOfInstances: {{ .Values.postgresql.replicaCount }}
+  users:
+    {{ $name }}:
+    - superuser
+    - createdb
+  databases:
+    {{ $name }}: {{ $name }}
+  volume:
+    size: {{ .Values.postgresql.persistence.size | quote }}
+    {{- include "common.storage.class" (dict "persistence" .Values.postgresql.persistence) | replace "storageClassName" "storageClass" | nindent 4 }}
+  resources: {{- toYaml .Values.postgresql.resources | nindent 4 }}
+
+  patroni:
+    pg_hba:
+      - local   all,replication   all       trust
+      - hostssl all,replication   +pamrole  all       pam
+      - host    all,replication   all       0.0.0.0/0 md5
+      - host    all,replication   all       ::1/128   md5

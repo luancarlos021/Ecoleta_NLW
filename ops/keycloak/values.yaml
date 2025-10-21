@@ -1,0 +1,102 @@
+global:
+  download:
+    args:
+      - -c
+      - |
+        curl -L -o /deployments/keycloak-metrics-spi.jar https://github.com/aerogear/keycloak-metrics-spi/releases/download/5.0.0/keycloak-metrics-spi-5.0.0.jar
+        curl -L -o /deployments/keycloak-mail-whitelisting.jar https://repo1.maven.org/maven2/net/micedre/keycloak/keycloak-mail-whitelisting/2.0/keycloak-mail-whitelisting-2.0.jar
+
+fullnameOverride: keycloak
+
+replicas: 1
+
+db:
+  host: keycloak-postgresql-db
+  dbname: keycloak
+  port: 5432
+  poolInitialSize: 10
+  poolMinSize: 10
+  poolMaxSize: 50
+
+resources:
+  requests:
+    memory: 1Gi
+  limits:
+    memory: 2Gi
+
+initContainers: |
+  - name: extensions
+    image: docker.io/curlimages/curl
+    imagePullPolicy: IfNotPresent
+    command:
+      - sh
+    args: {{ toYaml .Values.global.download.args | nindent 4 }}
+      
+    volumeMounts:
+      - name: deployments
+        mountPath: /deployments
+
+extraVolumeMounts:
+  - name: deployments
+    mountPath: /opt/keycloak/standalone/deployments
+
+extraVolumes:
+  - name: deployments
+    emptyDir: {}
+
+hostname: "sso.luancarlos.duckdns.org"
+    
+ingress:
+  enabled: true
+  servicePort: 8080
+  tls: true
+  path: /
+  ingressClassName: nginx
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+
+postgresql:
+  resources:
+      requests:
+        memory: 256Mi
+      limits:
+        memory: 512Mi
+  dockerImage: ghcr.io/zalando/spilo-16:3.3-p3
+  dbname: keycloak
+  version: "16"
+  replicaCount: 1
+  persistence:
+    size: 30Gi
+    storageClass: hostpath-openebs
+
+operator:
+  fullnameOverride: keycloak-operator
+  replicaCount: 1
+  image:
+    repository: quay.io/keycloak/keycloak-operator
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "24.0.2"
+
+    
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi

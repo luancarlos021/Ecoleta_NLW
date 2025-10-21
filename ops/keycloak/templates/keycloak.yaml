@@ -1,0 +1,72 @@
+apiVersion: k8s.keycloak.org/v2alpha1
+kind: Keycloak
+metadata:
+  name: "{{ include "common.names.fullname" . }}"
+  namespace: {{ include "common.names.namespace" . }}
+spec:
+  startOptimized: false
+  instances: {{ .Values.replicas }}
+  resources: {{ toYaml .Values.resources | nindent 4 }}
+  db:
+    vendor: postgres
+    usernameSecret:
+      name: "{{ .Values.postgresql.dbname }}.{{ include "common.names.fullname" . }}-postgresql-db.credentials.postgresql.acid.zalan.do"
+      key: username
+    passwordSecret:
+      name: "{{ .Values.postgresql.dbname }}.{{ include "common.names.fullname" . }}-postgresql-db.credentials.postgresql.acid.zalan.do"
+      key: password
+    host: {{ .Values.db.host }}
+    database: {{ .Values.db.dbname }}
+    port: {{ .Values.db.port }}
+    poolInitialSize: {{ .Values.db.poolInitialSize }}
+    poolMinSize: {{ .Values.db.poolMinSize }}
+    poolMaxSize: {{ .Values.db.poolMaxSize }}
+  http:
+    httpEnabled: true
+    httpPort: {{ .Values.ingress.servicePort }}
+  hostname:
+    hostname: {{ include "fullname.hostname" . }}
+
+  additionalOptions:
+    - name: log-console-output
+      value: json
+    - name: cache-stack
+      value: kubernetes
+    - name: cache-owner
+      value: "2"
+    - name: metrics-enabled 
+      value: 'true'
+    - name: http-metrics-histograms-enabled
+      value: 'true'
+    
+  ingress:
+    enabled: false
+    
+  proxy:
+    headers: xforwarded # double check your reverse proxy sets and overwrites the X-Forwarded-* headers
+  
+  unsupported:
+    podTemplate:
+      metadata:
+        {{- if .Values.podVersion }}
+        annotations: 
+          version: {{ .Values.podVersion | quote }}
+        {{- end }}
+      spec:
+        initContainers:
+          {{- if .Values.initContainers }}
+          {{- include "common.tplvalues.render" (dict "value" .Values.initContainers "context" $) | nindent 10 }}
+          {{- end }}
+        containers:
+          - name: keycloak
+            imagePullPolicy: IfNotPresent
+            volumeMounts: {{ toYaml .Values.extraVolumeMounts | nindent 14 }}
+        volumes: {{ toYaml .Values.extraVolumes | nindent 10 }}
+        
+        {{- with .Values.tolerations }}
+        tolerations:
+          {{- toYaml . | nindent 8}}
+        {{- end }}
+
+  transaction:
+    xaEnabled: false
