@@ -1,8 +1,16 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
+  labels:
+    app.kubernetes.io/name: keycloak-operator
   name: keycloak-operator-clusterrole
 rules:
+  - apiGroups:
+      - apiextensions.k8s.io
+    resources:
+      - customresourcedefinitions
+    verbs:
+      - get
   - apiGroups:
       - config.openshift.io
     resources:
@@ -15,7 +23,7 @@ kind: ClusterRole
 metadata:
   labels:
     app.kubernetes.io/name: keycloak-operator
-    app.kubernetes.io/version: 26.2.5
+    app.kubernetes.io/version: 26.4.0
   name: keycloakrealmimportcontroller-cluster-role
 rules:
   - apiGroups:
@@ -61,7 +69,7 @@ kind: ClusterRole
 metadata:
   labels:
     app.kubernetes.io/name: keycloak-operator
-    app.kubernetes.io/version: 26.2.5
+    app.kubernetes.io/version: 26.4.0
   name: keycloakcontroller-cluster-role
 rules:
   - apiGroups:
@@ -82,6 +90,30 @@ rules:
       - ""
     resources:
       - services
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - monitoring.coreos.com
+    resources:
+      - servicemonitors
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - networkpolicies
     verbs:
       - create
       - delete
@@ -124,18 +156,6 @@ rules:
       - get
       - list
       - watch
-  - apiGroups:
-      - networking.k8s.io
-    resources:
-      - networkpolicies
-    verbs:
-      - create
-      - delete
-      - get
-      - list
-      - patch
-      - update
-      - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -155,6 +175,8 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
+  labels:
+    app.kubernetes.io/name: keycloak-operator
   name: keycloak-operator-role
 rules:
   - apiGroups:
@@ -197,6 +219,12 @@ rules:
     verbs:
       - list
   - apiGroups:
+      - ""
+    resources:
+      - pods/log
+    verbs:
+      - get
+  - apiGroups:
       - batch
     resources:
       - jobs
@@ -220,6 +248,17 @@ rules:
       - delete
       - patch
       - update
+  - apiGroups:
+      - monitoring.coreos.com
+    resources:
+      - servicemonitors
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - update
+      - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -240,7 +279,7 @@ kind: RoleBinding
 metadata:
   labels:
     app.kubernetes.io/name: keycloak-operator
-    app.kubernetes.io/version: 26.2.5
+    app.kubernetes.io/version: 26.4.0
   name: keycloakrealmimportcontroller-role-binding
 roleRef:
   kind: ClusterRole
@@ -255,7 +294,7 @@ kind: RoleBinding
 metadata:
   labels:
     app.kubernetes.io/name: keycloak-operator
-    app.kubernetes.io/version: 26.2.5
+    app.kubernetes.io/version: 26.4.0
   name: keycloakcontroller-role-binding
 roleRef:
   kind: ClusterRole
@@ -270,7 +309,7 @@ kind: RoleBinding
 metadata:
   labels:
     app.kubernetes.io/name: keycloak-operator
-    app.kubernetes.io/version: 26.2.5
+    app.kubernetes.io/version: 26.4.0
   name: keycloak-operator-view
 roleRef:
   kind: ClusterRole
