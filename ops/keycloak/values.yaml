@@ -1,4 +1,4 @@
-globa:
+global:
   env: dev
   download:
     args:
