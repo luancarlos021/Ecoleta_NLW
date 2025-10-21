@@ -50,7 +50,7 @@ extraVolumes:
   - name: deployments
     emptyDir: {}
 
-hostname: "dev.sso.local.org"
+hostname: "sso.local.org"
     
 ingress:
   enabled: true
