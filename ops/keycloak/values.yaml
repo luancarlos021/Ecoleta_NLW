@@ -1,4 +1,5 @@
-global:
+globa:
+  env: dev
   download:
     args:
       - -c
