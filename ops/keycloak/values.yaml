@@ -50,7 +50,7 @@ extraVolumes:
   - name: deployments
     emptyDir: {}
 
-hostname: "sso.luancarlos.duckdns.org"
+hostname: "dev.sso.local.org"
     
 ingress:
   enabled: true
