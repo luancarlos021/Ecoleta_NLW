@@ -68,7 +68,7 @@ postgresql:
   version: "16"
   replicaCount: 1
   persistence:
-    size: 30Gi
+    size: 10Gi
     storageClass: hostpath-openebs
 
 operator:
